@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import "./profileRightBar.scss";
-
+import { AuthContext } from "../../context/AuthContext";
 const ProfileRightBar = () => {
+  const { currentUser } = useContext(AuthContext);
+  console.log("profilez", currentUser);
   return (
     <div className="profileRightBar">
       <div className="profileRightBarHeading">

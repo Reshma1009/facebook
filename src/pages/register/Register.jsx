@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import "./register.scss";
 import { DriveFolderUploadOutlined } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth, db, storage } from "../../firebase.confige";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 const Register = () => {
-  const [img, setImg] = useState(null);
+  const [ img, setImg ] = useState( null );
+  const navigate= useNavigate()
   let handleSubmit = (e) => {
     e.preventDefault();
     const displayName = e.target[0].value;
@@ -60,6 +61,7 @@ const Register = () => {
             );
           }
         );
+        navigate("/login");
       })
       .catch((error) => {
         const errorCode = error.code;
