@@ -10,13 +10,27 @@ import {
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import "./share.scss";
 import { db, storage } from "../../firebase.confige";
-import { collection, addDoc, serverTimestamp, updateDoc, doc, Timestamp, arrayUnion } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  updateDoc,
+  doc,
+  Timestamp,
+  arrayUnion,
+} from "firebase/firestore";
+import EmojiPicker from "emoji-picker-react";
 const Share = () => {
   const { currentUser } = useContext(AuthContext);
   const [input, setInput] = useState("");
+  const [showEmoji, setShowEmoji] = useState(false);
   console.log("sharepage", currentUser);
-  const [img, setImg] = useState(null);
-  let handlePost = async() => {
+  const [ img, setImg ] = useState( null );
+   let handleEmojiSend = (e) => {
+     console.log(e.emoji);
+     setInput(input + e.emoji);
+   };
+  let handlePost = async () => {
     if (img) {
       const storageRef = ref(storage, uuid());
 
@@ -35,7 +49,7 @@ const Share = () => {
               mess: input,
               img: downloadURL,
               timeStamp: serverTimestamp(),
-            } );
+            });
             await updateDoc(doc(db, "usersPost", currentUser.uid), {
               message: arrayUnion({
                 id: uuid(),
@@ -50,28 +64,28 @@ const Share = () => {
           });
         }
       );
-    } else
-    {
+    } else {
       await addDoc(collection(db, "posts"), {
-              uid: currentUser.uid,
-              name: currentUser.displayName,
-              photoURL: currentUser.photoURL,
-              mess: input,
-              timeStamp: serverTimestamp(),
-            } );
-           await updateDoc(doc(db, "usersPost", currentUser.uid), {
-             message: arrayUnion({
-               id: uuid(),
-               uid: currentUser.uid,
-               name: currentUser.displayName,
-               photoURL: currentUser.photoURL,
-               mess: input,
-               timeStamp: Timestamp.now(),
-             }),
-           });
+        uid: currentUser.uid,
+        name: currentUser.displayName,
+        photoURL: currentUser.photoURL,
+        mess: input,
+        timeStamp: serverTimestamp(),
+      });
+      await updateDoc(doc(db, "usersPost", currentUser.uid), {
+        message: arrayUnion({
+          id: uuid(),
+          uid: currentUser.uid,
+          name: currentUser.displayName,
+          photoURL: currentUser.photoURL,
+          mess: input,
+          timeStamp: Timestamp.now(),
+        }),
+      });
     }
     setInput("");
-    setImg(null);
+    setImg( null );
+    setShowEmoji(false)
   };
   console.log(uuid());
   let handleKey = (e) => {
@@ -80,6 +94,7 @@ const Share = () => {
   const removeImage = () => {
     setImg(null);
   };
+
   return (
     <div className="share">
       <div className="shareWrapper">
@@ -129,15 +144,24 @@ const Share = () => {
                 onChange={(e) => setImg(e.target.files[0])}
               />
             </label>
-            <div className="shareOption">
+            <div
+              onClick={() => setShowEmoji(!showEmoji)}
+              className="shareOption"
+            >
               <EmojiEmotions
                 className="shareIcon"
                 style={{ color: "#bfc600ec" }}
               />
+
               <span className="shareOptionText">Feelings/Activity</span>
             </div>
           </div>
         </div>
+        {showEmoji && (
+          <div>
+            <EmojiPicker onEmojiClick={ handleEmojiSend } />
+          </div>
+        )}
       </div>
     </div>
   );

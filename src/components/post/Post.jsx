@@ -13,7 +13,7 @@ import {
 import { Link } from "react-router-dom";
 
 const Post = ({ post }) => {
-  // console.log(post);
+  console.log("postPage", post);
   return (
     <div className="post">
       <div className="postWrapper">
@@ -22,16 +22,18 @@ const Post = ({ post }) => {
             <Link to="/profile/userId">
               <img
                 src={
-                  Users.filter((u) => u.id === post.userId)[0].profilePicture
+                  // Users.filter((u) => u.id === post.userId)[0].profilePicture
+                  post.photoURL
                 }
                 alt=""
                 className="postProfileImg"
               />
             </Link>
             <span className="postUsername">
-              {Users.filter((u) => u.id === post.userId)[0].username}
+             {/* {Users.filter((u) => u.id === post.userId)[0].username} */}
+              {post.name}
             </span>
-            <span className="postDate">{post.date}</span>
+            <span className="postDate">{}</span>
           </div>
           <div className="postTopRight">
             <IconButton>
@@ -40,19 +42,17 @@ const Post = ({ post }) => {
           </div>
         </div>
         <div className="postCenter">
-          <span className="postText">{post.body}</span>
+          <span className="postText">{post.mess}</span>
           <img src={post.photo} alt="" className="postImg" />
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
             <Favorite className="bottomLeftIcon" style={{ color: "red" }} />
             <ThumbUp className="bottomLeftIcon" style={{ color: "#011631" }} />
-            <span className="postLikeCounter">{post.like}</span>
+            <span className="postLikeCounter">{}</span>
           </div>
           <div className="postBottomRight">
-            <span className="postCommentText">
-              {post.comment} · comments · share
-            </span>
+            <span className="postCommentText">{} · comments · share</span>
           </div>
         </div>
 
