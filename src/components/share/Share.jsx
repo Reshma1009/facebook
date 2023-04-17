@@ -23,7 +23,10 @@ import EmojiPicker from "emoji-picker-react";
 const Share = () => {
   const { currentUser } = useContext(AuthContext);
   const [input, setInput] = useState("");
-  const [showEmoji, setShowEmoji] = useState(false);
+  const [ showEmoji, setShowEmoji ] = useState( false );
+  const dates = `${
+          new Date().getFullYear() + 1
+        }/${new Date().getDate()}/${new Date().getMonth()} ${new Date().getHours()}:${new Date().getMinutes()}`
   console.log("sharepage", currentUser);
   const [ img, setImg ] = useState( null );
    let handleEmojiSend = (e) => {
@@ -71,6 +74,7 @@ const Share = () => {
         photoURL: currentUser.photoURL,
         mess: input,
         timeStamp: serverTimestamp(),
+        date: dates,
       });
       await updateDoc(doc(db, "usersPost", currentUser.uid), {
         message: arrayUnion({
